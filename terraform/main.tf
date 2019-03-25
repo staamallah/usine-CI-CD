@@ -55,7 +55,7 @@ resource "google_compute_address" "default"{
 
 
 resource "google_compute_instance" "controller"{
-        count = 3
+        count = 2
 	name = "terraform-controller-${count.index}"
 	machine_type = "${var.google_type}"
 	zone = "${var.google_zone}"
@@ -63,7 +63,9 @@ resource "google_compute_instance" "controller"{
 	tags = ["terraform-kubernetes-the-hard-way", "controller"]
 	boot_disk {
 		initialize_params {
+	
 			image = "${var.google_image_boot}"
+			size = "100"
 		}
 	}
 	network_interface {
@@ -86,7 +88,7 @@ metadata_startup_script = "apt-get install -y python"
 }
 
 resource "google_compute_instance" "worker"{
-	count = 3
+	count = 2
 	name = "terraform-worker-${count.index}"
 	machine_type = "${var.google_type}"
 	zone = "${var.google_zone}"
@@ -95,6 +97,7 @@ resource "google_compute_instance" "worker"{
 	boot_disk {
 		initialize_params {
 			image = "${var.google_image_boot}"
+			size = "100"
 		}
 	}
 	network_interface {
