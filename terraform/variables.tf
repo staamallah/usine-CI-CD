@@ -7,7 +7,7 @@ variable "gce_ssh_pub_key_file" {
 }
 
 variable "google_credential" {
-	default = "/home/taamallah_sabri/advskill-225022-03c20e56a292.json"
+	default = " /home/taamallah_sabri/advskill-d14811d88477.json"
 }
 
 variable "google_project" {
