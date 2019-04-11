@@ -55,7 +55,7 @@ resource "google_compute_address" "default"{
 
 
 resource "google_compute_instance" "controller"{
-        count = 2
+        count = 3
 	name = "terraform-controller-${count.index}"
 	machine_type = "${var.google_type}"
 	zone = "${var.google_zone}"
@@ -88,7 +88,7 @@ metadata_startup_script = "apt-get install -y python"
 }
 
 resource "google_compute_instance" "worker"{
-	count = 2
+	count = 3
 	name = "terraform-worker-${count.index}"
 	machine_type = "${var.google_type}"
 	zone = "${var.google_zone}"
