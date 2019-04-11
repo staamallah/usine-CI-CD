@@ -8,7 +8,7 @@ resource "google_compute_network" "default"{
 resource "google_compute_subnetwork" "default"{
 	name ="terraform-kubernetes"
 	network = "${google_compute_network.default.name}"
-	ip_cidr_range = "10.210.0.0/24"
+	ip_cidr_range = "10.250.0.0/24"
 }
 
 
@@ -26,7 +26,7 @@ resource "google_compute_firewall" "firewall_internal"{
 	allow{
 	   protocol = "tcp"
 	}
-	source_ranges = ["10.210.0.0/24", "10.110.0.0/16"]
+	source_ranges = ["10.250.0.0/24", "10.150.0.0/16"]
 }
 
 
@@ -70,7 +70,7 @@ resource "google_compute_instance" "controller"{
 	}
 	network_interface {
 		subnetwork = "${google_compute_subnetwork.default.name}"
-		network_ip = "10.210.0.1${count.index}"
+		network_ip = "10.250.0.1${count.index}"
 
 	access_config {
       // Ephemeral IP
@@ -102,7 +102,7 @@ resource "google_compute_instance" "worker"{
 	}
 	network_interface {
 		subnetwork = "${google_compute_subnetwork.default.name}"
-		network_ip = "10.210.0.2${count.index}"
+		network_ip = "10.250.0.2${count.index}"
 	 access_config {
       // Ephemeral IP
     	}
@@ -111,7 +111,7 @@ resource "google_compute_instance" "worker"{
 		scopes = ["compute-rw", "storage-ro", "service-management", "service-control", "logging-write","monitoring"]
 	}
 	metadata = { 
-		pod-cidr = "10.110.${count.index}.0/24"	
+		pod-cidr = "10.150.${count.index}.0/24"	
    		sshKeys = "${var.gce_ssh_user}:${file(var.gce_ssh_pub_key_file)}"
   }
 

@@ -6,9 +6,11 @@ mkdir encryption-configuration-file
 
 cd encryption-configuration-file 
 
-echo "..... Generate Encryption Configuration File ....."
+echo "..... Generate an encryption key ....."
 
 	 ENCRYPTION_KEY=$(head -c 32 /dev/urandom | base64)
+
+echo "..... Generate Encryption Configuration File ....."
 
 cat > encryption-config.yaml <<EOF
 kind: EncryptionConfig

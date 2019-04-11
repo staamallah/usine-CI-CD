@@ -210,7 +210,7 @@ EOF
 echo "..... Generate Kubernetes API Server Certificate ....."
 
 
-KUBERNETES_PUBLIC_ADDRESS=$(gcloud compute addresses describe kubernetes-the-hard-way \
+KUBERNETES_PUBLIC_ADDRESS=$(gcloud compute addresses describe terraform-kubernetes-the-hard-way \
 	  --region $(gcloud config get-value compute/region) \
 	    --format 'value(address)')
 
