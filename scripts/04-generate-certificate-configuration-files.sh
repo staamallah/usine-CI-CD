@@ -75,10 +75,7 @@ EOF
 		-profile=kubernetes \
 	admin-csr.json | cfssljson -bare admin
 
-
-
-echo"..... Generate Kubelet Client Certificates ....." 
-
+echo "..... Generate Kubelet Client Certificates ....." 
 
 for instance in terraform-worker-0 terraform-worker-1 terraform-worker-2; do
 
@@ -117,7 +114,7 @@ cfssl gencert \
 done
 
 
-echo"..... Generate Controller Manager Client Certificate ....."
+echo "..... Generate Controller Manager Client Certificate ....."
 
 
 cat > kube-controller-manager-csr.json <<EOF

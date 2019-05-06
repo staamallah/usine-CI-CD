@@ -1,0 +1,102 @@
+---
+# tasks file for etcd
+
+
+- name: download etcd archive 
+  get_url:
+        url: https://github.com/coreos/etcd/releases/download/{{ etcd_version }}/etcd-{{ etcd_version }}-linux-amd64.tar.gz
+        dest: /home/taamallah_sabri/
+        owner: taamallah_sabri
+        group: taamallah_sabri
+        mode: 0664
+  tags: ['etcd.tar.gz']
+
+- name: Unarchive etcd
+  unarchive:
+        src: /home/taamallah_sabri/etcd-{{ etcd_version }}-linux-amd64.tar.gz
+        dest: /home/taamallah_sabri/
+        owner: taamallah_sabri
+        group: taamallah_sabri
+        #mode: 0755
+        remote_src: yes
+  tags: ['unarchive']
+
+- name: Move etcd bin
+  command: mv /home/taamallah_sabri/etcd-{{ etcd_version }}-linux-amd64/{{item}} /usr/local/bin/
+  
+  with_items:
+        - etcd
+        - etcdctl        
+  tags: ['move']       
+
+- name: Creates directory /etc/etcd
+  file: path=/etc/etcd state=directory
+       
+  tags: ['directory']
+
+- name: Creates directory /var/lib/etcd
+  file: path=/var/lib/etcd state=directory
+       
+  tags: ['directory']
+
+- name: copy ca cert
+  copy:
+        src: /home/taamallah_sabri/ca.pem
+        dest: /etc/etcd/ca.pem
+        remote_src: yes
+  tags: ['copy']
+
+- name: copy kubernetes key
+  copy:
+        src: /home/taamallah_sabri/kubernetes-key.pem                        
+        dest: /etc/etcd/kubernetes-key.pem
+        remote_src: yes
+
+  tags: ['copy']
+
+- name: copy kubernetes cert
+  copy:
+
+        src: /home/taamallah_sabri/kubernetes.pem
+        dest: /etc/etcd/kubernetes.pem
+        remote_src: yes
+
+  tags: ['copy']
+
+- name: copy define-etcd-service.sh
+  copy:
+        src: /home/taamallah_sabri/usine-CI-CD/scripts/07-define-etcd-service.sh
+        dest: /home/taamallah_sabri/define-etcd-service.sh
+        owner: root
+        group: root
+        mode: 0744
+  tags: ['copy']
+
+- name: Create etcd conf
+  command: /home/taamallah_sabri/define-etcd-service.sh
+
+  tags: ['etcd-service']
+
+- name: Reload systemd
+  command: systemctl daemon-reload
+  
+  tags: ['etcd-service']
+
+- name: Enable etcd
+  command: systemctl enable etcd
+  
+  tags: ['etcd-service']
+
+- name: Start etcd
+  command: systemctl start etcd
+  
+  notify: Restart ETCD
+  
+  tags: ['etcd-service']
+
+  #- name: List the etcd cluster members
+  #command: sudo ETCDCTL_API=3 etcdctl member list --endpoints=https://127.0.0.1:2379 --cacert=/etc/etcd/ca.pem --cert=/etc/etcd/kubernetes.pem --key=/etc/etcd/kubernetes-key.pem 
+  #remote_src: yes
+  #raw: member > /home/taamallah_sabri/list-members-etcd.log  
+
+  #tags: ['etcd-members']

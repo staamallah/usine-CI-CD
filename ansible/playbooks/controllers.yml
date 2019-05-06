@@ -1,0 +1,34 @@
+---
+- hosts: kubernetes-controllers
+  become: true
+  tasks:
+         - name: copy certificates on kubernetes controllers
+           copy:
+                   src: /home/taamallah_sabri/usine-CI-CD/scripts/certificate-configuration-files/{{item}}
+                   dest: /home/taamallah_sabri/
+           with_items:
+                    - ca.pem                   
+                    - ca-key.pem
+                    - kubernetes-key.pem
+                    - kubernetes.pem
+                    - service-account-key.pem
+                    - service-account.pem
+
+
+         - name: copy kubernetes configuration files on kubernetes controllers
+           copy:
+                   src: /home/taamallah_sabri/usine-CI-CD/scripts/kubernetes-configuration-files/{{item}}
+
+                   dest: /home/taamallah_sabri/
+
+           with_items:
+                  
+                   - admin.kubeconfig
+                   - kube-controller-manager.kubeconfig
+                   - kube-scheduler.kubeconfig  
+
+         - name: copy encryption configuration file on kubernetes controllers
+           copy:
+                   src: /home/taamallah_sabri/usine-CI-CD/scripts/encryption-configuration-file/encryption-config.yaml
+
+                   dest: /home/taamallah_sabri/

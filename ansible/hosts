@@ -1,0 +1,16 @@
+
+
+[control]
+control ansible_connection=local
+
+[kubernetes-controllers]
+
+terraform-controller-0
+terraform-controller-1
+terraform-controller-2
+
+[kubernetes-workers]
+
+terraform-worker-0
+terraform-worker-1
+terraform-worker-2

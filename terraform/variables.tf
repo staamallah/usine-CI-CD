@@ -3,7 +3,7 @@ variable "gce_ssh_user" {
 	default = "taamallah_sabri"
 }
 variable "gce_ssh_pub_key_file" {
-	default = "~/.ssh/id_rsa.pub"
+	default = "~/.ssh/google_compute_engine.pub"
 }
 
 variable "google_credential" {

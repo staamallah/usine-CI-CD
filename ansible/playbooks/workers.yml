@@ -1,0 +1,14 @@
+---
+- hosts: kubernetes-workers
+  become: true
+  tasks:
+         - name: copy certificates on kubernetes workers
+           copy:
+                src: /home/taamallah_sabri/usine-CI-CD/scripts/certificate-configuration-files/{{item}}
+                dest: /home/taamallah_sabri/
+           with_items:
+                   - ca.pem                   
+                   - "{{ansible_hostname}}".pem
+                   - "{{ansible_hostname}}"-key.pem 
+
+               
