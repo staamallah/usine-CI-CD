@@ -1,0 +1,18 @@
+- hosts: kubernetes-controllers
+  become: true
+  tasks:
+        - name: copy certificates on kubernetes controllers
+          copy:
+                src: /home/taamallah_sabri/usine-CI-CD/scripts/08-script.sh
+                dest: /home/taamallah_sabri/install-nginx.sh
+                owner: root
+                group: root
+                mode: 0744
+
+  tags: ['copy']
+
+        - name: Install nginx conf
+          command: /usr/bin/sh /home/taamallah_sabri/install-nginx.sh
+          remote_user: yes
+          
+  #tags: ['install']

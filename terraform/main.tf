@@ -29,6 +29,44 @@ resource "google_compute_firewall" "firewall_internal"{
 	source_ranges = ["10.250.0.0/24", "10.150.0.0/16"]
 }
 
+resource "google_compute_health_check" "internal-health-check" {
+	name = "kubernetes"
+	host = "kubernetes.default.svc.cluster.local " 
+	request_path = "/healthz"	
+	timeout_sec        = 5
+	check_interval_sec = 5
+
+ tcp_health_check {
+   port = "80"
+ }
+}
+
+resource "google_compute_firewall" "firewall_health-check"{
+
+        name = "terraform-kubernetes-the-hard-way-allow-health-check"
+        network = "${google_compute_network.default.name}"
+
+        allow{
+           protocol = "tcp"
+        }
+
+	source_ranges = ["209.85.152.0/22", "209.85.204.0/22", "35.191.0.0/16"]
+}
+
+resource "google_compute_forwarding_rule" "default" {
+
+	name       = "terraform-kubernetes-forwarding-rule"
+  	target     = "${google_compute_target_pool.default.self_link}"
+  	ports = "6443"
+  
+}
+
+resource "google_compute_target_pool" "default" {
+ 
+	name = "website-target-pool"
+}
+
+
 
 resource "google_compute_firewall" "firewall_external"{
 

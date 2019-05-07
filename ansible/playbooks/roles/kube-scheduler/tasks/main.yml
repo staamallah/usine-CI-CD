@@ -1,2 +1,75 @@
 ---
 # tasks file for kube-scheduler
+
+- name: download kube-scheduler archive 
+  get_url:
+        url: https://storage.googleapis.com/kubernetes-release/release/{{ kube_scheduler_version }}/bin/linux/amd64/kube-scheduler
+        dest: /home/taamallah_sabri/
+        owner: taamallah_sabri
+        group: taamallah_sabri
+        mode: 0744
+  tags: ['download']
+
+- name: download kubectl archive 
+  get_url:
+        url: https://storage.googleapis.com/kubernetes-release/release/{{ kubectl_version }}/bin/linux/amd64/kubectl          
+        dest: /home/taamallah_sabri/
+        owner: taamallah_sabri
+        group: taamallah_sabri
+        mode: 0744
+  tags: ['download']
+
+- name: Move kube scheduler bin
+  command: mv /home/taamallah_sabri/kube-scheduler /usr/local/bin/
+  
+  tags: ['move']       
+
+
+- name: Move kubectl bin
+  command: mv /home/taamallah_sabri/kubectl /usr/local/bin/
+
+  tags: ['move']       
+
+- name: Creates directory /etc/kubernetes/config
+  file: path=/etc/kubernetes/config state=directory
+           
+  tags: ['directory']
+
+ 
+- name: copy kube scheduler config
+  copy:
+        src: /home/taamallah_sabri/kube-scheduler.kubeconfig
+        dest: /var/lib/kubernetes
+        remote_src: yes
+
+  tags: ['copy']
+
+- name: copy define-kube-scheduler-service.sh
+  copy:
+        src: /home/taamallah_sabri/usine-CI-CD/scripts/08-define-kube-scheduler-service.sh
+        dest: /home/taamallah_sabri/define-kube-scheduler-service.sh
+        owner: root
+        group: root
+        mode: 0744
+
+  tags: ['copy']
+
+- name: Create kube scheduler conf
+  command: /home/taamallah_sabri/define-kube-scheduler-service.sh
+
+  tags: ['config']
+
+- name: Reload systemd
+  command: systemctl daemon-reload
+  
+  tags: ['config']
+
+- name: Enable kube scheduler
+  command: systemctl enable kube-scheduler
+  
+  tags: ['config']
+
+- name: Start kube scheduler
+  command: systemctl start kube-scheduler
+  
+  tags: ['config']

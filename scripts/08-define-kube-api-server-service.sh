@@ -5,8 +5,7 @@
 INTERNAL_IP=$(curl -s -H "Metadata-Flavor: Google" \
 	  http://metadata.google.internal/computeMetadata/v1/instance/network-interfaces/0/ip)
 
-WantedBy=multi-user.target
-cat <<EOF | sudo tee /etc/systemd/system/kube-apiserver.service
+cat <<EOF | sudo tee /etc/systemd/system/kube-api-server.service
 [Unit]
 Description=Kubernetes API Server
 Documentation=https://github.com/kubernetes/kubernetes
@@ -28,7 +27,7 @@ ExecStart=/usr/local/bin/kube-apiserver \\
 	--etcd-cafile=/var/lib/kubernetes/ca.pem \\
 	--etcd-certfile=/var/lib/kubernetes/kubernetes.pem \\
 	--etcd-keyfile=/var/lib/kubernetes/kubernetes-key.pem \\
-	--etcd-servers=https://10.240.0.10:2379,https://10.240.0.11:2379,https://10.240.0.12:2379 \\
+	--etcd-servers=https://10.250.0.10:2379,https://10.250.0.11:2379,https://10.250.0.12:2379 \\
 	--event-ttl=1h \\
 	--experimental-encryption-provider-config=/var/lib/kubernetes/encryption-config.yaml \\
 	--kubelet-certificate-authority=/var/lib/kubernetes/ca.pem \\
@@ -37,7 +36,7 @@ ExecStart=/usr/local/bin/kube-apiserver \\
 	--kubelet-https=true \\
 	--runtime-config=api/all \\
 	--service-account-key-file=/var/lib/kubernetes/service-account.pem \\
-	--service-cluster-ip-range=10.32.0.0/24 \\
+	--service-cluster-ip-range=10.150.0.0/24 \\
 	--service-node-port-range=30000-32767 \\
 	--tls-cert-file=/var/lib/kubernetes/kubernetes.pem \\
 	--tls-private-key-file=/var/lib/kubernetes/kubernetes-key.pem \\

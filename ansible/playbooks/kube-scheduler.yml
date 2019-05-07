@@ -1,0 +1,4 @@
+- hosts: kubernetes-controllers
+  become: true
+  roles:
+        - kube-scheduler

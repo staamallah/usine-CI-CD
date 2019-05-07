@@ -1,2 +1,68 @@
 ---
 # tasks file for kube-api-server
+
+- name: download kube-api-server archive 
+  get_url:
+        url: https://storage.googleapis.com/kubernetes-release/release/{{ kube_api_server_version }}/bin/linux/amd64/kube-apiserver
+        dest: /home/taamallah_sabri/
+        owner: taamallah_sabri
+        group: taamallah_sabri
+        mode: 0744
+  tags: ['download']
+
+- name: Move kube api server bin
+  command: mv /home/taamallah_sabri/kube-apiserver /usr/local/bin/
+  
+  tags: ['move']       
+
+- name: Creates directory /var/lib/kubernetes
+  file: path=/var/lib/kubernetes state=directory
+       
+  tags: ['directory']
+
+- name: copy Certificates, Kubernetes and Encryption configuration files
+  copy:
+        src: /home/taamallah_sabri/{{item}}
+        dest: /var/lib/kubernetes
+        remote_src: yes
+
+  with_items:
+        - ca.pem                   
+        - ca-key.pem
+        - kubernetes-key.pem
+        - kubernetes.pem
+        - service-account-key.pem
+        - service-account.pem
+        - encryption-config.yaml
+
+  tags: ['copy']
+
+- name: copy define-kube-api-server-service.sh
+  copy:
+        src: /home/taamallah_sabri/usine-CI-CD/scripts/08-define-kube-api-server-service.sh
+        dest: /home/taamallah_sabri/define-kube-api-server-service.sh
+        owner: root
+        group: root
+        mode: 0744
+
+  tags: ['copy']
+
+- name: Create kube api server conf
+  command: /home/taamallah_sabri/define-kube-api-server-service.sh
+
+  tags: ['kubeapiserver']
+
+- name: Reload systemd
+  command: systemctl daemon-reload
+  
+  tags: ['kubeapiserver']
+
+- name: Enable kube api server
+  command: systemctl enable kube-api-server
+  
+  tags: ['kubeapiserver']
+
+- name: Start kube api server
+  command: systemctl start kube-api-server
+  
+  tags: ['kubeapiserver']

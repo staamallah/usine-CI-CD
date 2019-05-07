@@ -1,2 +1,54 @@
 ---
 # tasks file for kube-controller-manager
+
+- name: download kube-controller-manager archive 
+  get_url:
+        url: https://storage.googleapis.com/kubernetes-release/release/{{ kube_controller_manager_version }}/bin/linux/amd64/kube-controller-manager
+        dest: /home/taamallah_sabri/
+        owner: taamallah_sabri
+        group: taamallah_sabri
+        mode: 0744
+  tags: ['download']
+
+- name: Move kube controller manager bin
+  command: mv /home/taamallah_sabri/kube-controller-manager /usr/local/bin/
+  
+  tags: ['move']       
+
+- name: copy kube controller manager config
+  copy:
+        src: /home/taamallah_sabri/kube-controller-manager.kubeconfig
+        dest: /var/lib/kubernetes
+        remote_src: yes
+
+  tags: ['copy']
+
+- name: copy define-kube-controller-manager-service.sh
+  copy:
+        src: /home/taamallah_sabri/usine-CI-CD/scripts/08-define-kube-controller-manager-service.sh
+        dest: /home/taamallah_sabri/define-kube-controller-manager-service.sh
+        owner: root
+        group: root
+        mode: 0744
+
+  tags: ['copy']
+
+- name: Create kube controller manager conf
+  command: /home/taamallah_sabri/define-kube-controller-manager-service.sh
+
+  tags: ['kubecontrollermanager']
+
+- name: Reload systemd
+  command: systemctl daemon-reload
+  
+  tags: ['kubecontrollermanager']
+
+- name: Enable kube controller manager
+  command: systemctl enable kube-controller-manager
+  
+  tags: ['kubecontrollermanager']
+
+- name: Start kube controller manager
+  command: systemctl start kube-controller-manager
+  
+  tags: ['kubecontrollermanager']
