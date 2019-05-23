@@ -11,8 +11,8 @@
 
   tags: ['copy']
 
-        - name: Install nginx conf
-          command: /usr/bin/sh /home/taamallah_sabri/install-nginx.sh
-          remote_user: yes
+  #- name: Install nginx conf
+  #       command: /home/taamallah_sabri/install-nginx.sh
+  #        remote_user: yes
           
   #tags: ['install']

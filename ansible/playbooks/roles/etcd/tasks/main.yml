@@ -2,7 +2,7 @@
 # tasks file for etcd
 
 
-- name: download etcd archive 
+- name: Téléchargement des binaires ETCD 
   get_url:
         url: https://github.com/coreos/etcd/releases/download/{{ etcd_version }}/etcd-{{ etcd_version }}-linux-amd64.tar.gz
         dest: /home/taamallah_sabri/
@@ -11,7 +11,7 @@
         mode: 0664
   tags: ['etcd.tar.gz']
 
-- name: Unarchive etcd
+- name: Extraction des binaires ETCD
   unarchive:
         src: /home/taamallah_sabri/etcd-{{ etcd_version }}-linux-amd64.tar.gz
         dest: /home/taamallah_sabri/
@@ -21,7 +21,7 @@
         remote_src: yes
   tags: ['unarchive']
 
-- name: Move etcd bin
+- name: Installation des binaires ETCD
   command: mv /home/taamallah_sabri/etcd-{{ etcd_version }}-linux-amd64/{{item}} /usr/local/bin/
   
   with_items:

@@ -1,7 +1,7 @@
 ---
 # tasks file for kube-api-server
 
-- name: download kube-api-server archive 
+- name: Téléchargement des binaires kube api server 
   get_url:
         url: https://storage.googleapis.com/kubernetes-release/release/{{ kube_api_server_version }}/bin/linux/amd64/kube-apiserver
         dest: /home/taamallah_sabri/
@@ -10,7 +10,7 @@
         mode: 0744
   tags: ['download']
 
-- name: Move kube api server bin
+- name: Installation des binaires kube api server
   command: mv /home/taamallah_sabri/kube-apiserver /usr/local/bin/
   
   tags: ['move']       

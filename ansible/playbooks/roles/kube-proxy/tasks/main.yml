@@ -1,0 +1,59 @@
+---
+# tasks file for kube-proxy
+
+- name: download kube-proxy archive 
+  get_url:
+        url: https://storage.googleapis.com/kubernetes-release/release/{{ kube_api_server_version }}/bin/linux/amd64/kube-proxy
+        dest: /home/taamallah_sabri/
+        owner: taamallah_sabri
+        group: taamallah_sabri
+        mode: 0744
+  tags: ['download']
+
+- name: Move kube proxy to  bin
+  command: mv /home/taamallah_sabri/kube-proxy /usr/local/bin/
+  
+  tags: ['move']       
+
+- name: Creates directory /var/lib/kube-proxy
+  file: path=/var/lib/kube-proxy state=directory
+       
+  tags: ['directory']
+
+- name: copy Kubernetes proxy configuration file
+  copy:
+        src: /home/taamallah_sabri/kube-proxy.kubeconfig
+        dest: /var/lib/kube-proxy/kubeconfig
+        remote_src: yes
+
+  tags: ['copy']
+
+- name: copy define-kube-proxy-service.sh
+  copy:
+        src: /home/taamallah_sabri/usine-CI-CD/scripts/09-define-kube-proxy-service.sh
+        dest: /home/taamallah_sabri/define-kube-proxy-service.sh
+        owner: root
+        group: root
+        mode: 0744
+
+  tags: ['copy']
+
+- name: Create kube proxy conf
+  command: /home/taamallah_sabri/define-kube-proxy-service.sh
+
+  tags: ['kubeproxy']
+
+- name: Reload systemd
+  command: systemctl daemon-reload
+  
+  tags: ['kubeproxy']
+
+- name: Enable kube proxy
+  command: systemctl enable kube-proxy
+  
+  tags: ['kubeproxy']
+
+- name: Start kube proxy
+  command: systemctl start kube-proxy
+  
+  tags: ['kuberoxy']
